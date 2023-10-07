@@ -1,5 +1,14 @@
-# Mantine Vite template
+# HackUTA Dashboard
 
-Get started with the template by clicking `Use this template` button on the top of the page.
+Getting Started:
+First run:
 
-[Documentation](https://mantine.dev/guides/vite/)
+```bash
+yarn
+```
+
+Then run:
+
+```bash
+yarn dev
+```
