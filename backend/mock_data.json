@@ -1,0 +1,52 @@
+{
+  "trips": 19,
+  "miles": 144.5,
+  "scores": {
+    "braking": 95,
+    "acceleration": 97,
+    "speed": 50,
+    "cornering": 70,
+    "phone distraction": 80
+  },
+  "lastServicedDate": {
+    "brakes": "2023-01-01",
+    "tires": "2023-01-01",
+    "oil": "2023-01-01",
+    "battery": "2023-01-01",
+    "coolant": "2023-01-01",
+    "air filter": "2023-01-01"
+  },
+  "estimatedServiceDate": {
+    "brakes": {
+      "date": "2023-07-01",
+      "miles": 20000
+    },
+    "tires": {
+      "date": "2029-01-01",
+      "miles": 50000
+    },
+    "oil": {
+      "date": "2023-07-01",
+      "miles": 7500
+    },
+    "battery": {
+      "date": "2026-01-01",
+      "miles": 30000
+    },
+    "coolant": {
+      "date": "2025-01-01",
+      "miles": 30000
+    },
+    "air filter": {
+      "date": "2024-01-01",
+      "miles": 15000
+    }
+  },
+  "vehicle": {
+    "vehicleType": "Sedan",
+    "vehicleMake": "Toyota",
+    "vehicleModel": "Camry",
+    "vehicleYear": 2012,
+    "miles": 60000
+  }
+}
