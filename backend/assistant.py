@@ -86,8 +86,6 @@ class Assistant:
         self.messages.append(completion.choices[0].message)
         self.speak(output)
 
-        pass
-
     def speak(self, text):
         self.talking = True  # if I wanna add stop ability, I think function needs to be it's own object
         asyncio.run(speak(text))
@@ -126,7 +124,7 @@ class CallHandler:
 
 
 def mouse_click(x, y):
-    pydirectinput.moveTo(x, y)
+    pydirectinput.moveTo(1759, 948)
     pydirectinput.click()
 
 
@@ -135,7 +133,9 @@ def call_main():
         AIstant = Assistant()
         handler = StreamHandler(AIstant)
         handler.listen()
-    except Exception:
+    except Exception as e:
+        # print the exception
+        print(e)
         if os.path.exists("dictate.wav"):
             os.remove("dictate.wav")
         print("handler died")

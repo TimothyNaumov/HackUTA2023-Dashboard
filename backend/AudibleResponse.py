@@ -23,7 +23,7 @@ headers = {
     "xi-api-key": xi_api_key,
 }
 
-sound_device = 5
+sound_device = 11
 
 # Get a list of all the mp3 files in the fillerphrases directory
 fillerphrases_dir = "./filler_phrases"
@@ -35,7 +35,7 @@ async def play_filler():
     while True:
         fillerphrase_file = os.path.join(fillerphrases_dir, random.choice(mp3_files))
         fillerphrase_data, fillerphrase_fs = sf.read(fillerphrase_file)
-        sd.play(fillerphrase_data, fillerphrase_fs)
+        sd.play(fillerphrase_data, fillerphrase_fs, device=sound_device)
         await asyncio.sleep(
             len(fillerphrase_data) / fillerphrase_fs
         )  # Sleep until filler phrase is finished playing
@@ -45,7 +45,7 @@ async def get_transcription(message):
     data = {
         "text": message,
         "model_id": "eleven_monolingual_v1",
-        "voice_settings": {"stability": 0.25, "similarity_boost": 0.5},
+        "voice_settings": {"stability": 0.201, "similarity_boost": 0.5},
     }
 
     response = requests.post(url, json=data, headers=headers, stream=True)
@@ -56,7 +56,7 @@ async def get_transcription(message):
                 f.write(chunk)
 
     data, fs = sf.read("AIResponse.mp3")
-    sd.play(data, fs)
+    sd.play(data, fs, device=sound_device)
     sd.wait()
 
 
