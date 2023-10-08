@@ -3,6 +3,7 @@ from livewhisper import StreamHandler
 import os
 import openai
 import json
+import asyncio
 from openAI import generate_p1_response
 from AudibleResponse import speak
 from dotenv import load_dotenv
@@ -89,7 +90,7 @@ class Assistant:
 
     def speak(self, text):
         self.talking = True  # if I wanna add stop ability, I think function needs to be it's own object
-        speak(text)
+        asyncio.run(speak(text))
         self.talking = False
 
 
