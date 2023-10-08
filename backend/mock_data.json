@@ -2,44 +2,44 @@
   "trips": 19,
   "miles": 144.5,
   "scores": {
-    "braking": 95,
-    "acceleration": 97,
-    "speed": 50,
-    "cornering": 70,
+    "braking": 68,
+    "acceleration": 44,
+    "speed": 60,
+    "cornering": 33,
     "phone distraction": 80
   },
   "lastServicedDate": {
     "brakes": "2023-01-01",
-    "tires": "2023-01-01",
-    "oil": "2023-01-01",
+    "tires": "2021-01-01",
+    "oil": "2023-05-01",
     "battery": "2023-01-01",
     "coolant": "2023-01-01",
     "air filter": "2023-01-01"
   },
-  "estimatedServiceDate": {
+  "timeUntilService": {
     "brakes": {
-      "date": "2023-07-01",
-      "miles": 20000
+      "days": "250",
+      "miles": 14780
     },
     "tires": {
-      "date": "2029-01-01",
-      "miles": 50000
+      "date": "53",
+      "miles": 1260
     },
     "oil": {
-      "date": "2023-07-01",
-      "miles": 7500
+      "date": "210",
+      "miles": 4892
     },
     "battery": {
-      "date": "2026-01-01",
-      "miles": 30000
+      "date": "745",
+      "miles": 27688
     },
     "coolant": {
-      "date": "2025-01-01",
-      "miles": 30000
+      "date": "384",
+      "miles": 18990
     },
     "air filter": {
-      "date": "2024-01-01",
-      "miles": 15000
+      "date": "126",
+      "miles": 2344
     }
   },
   "vehicle": {

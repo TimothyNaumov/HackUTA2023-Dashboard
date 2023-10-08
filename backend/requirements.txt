@@ -1,2 +1,9 @@
 twilio
 python-dotenv
+flask
+pydub
+playsound
+pyaudio
+sounddevice
+soundfile
+numpy
