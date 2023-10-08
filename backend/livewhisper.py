@@ -4,7 +4,7 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import openai
 import json
-import time
+from time import time as time2
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +20,7 @@ Translate = False  # Translate non-English to English?
 SampleRate = 44100  # Stream device recording frequency
 BlockSize = 100  # Block size in milliseconds
 Threshold = 0.03  # Minimum volume threshold to activate listening
+Lower_Threshold = 0.005  # Volume to not die
 Vocals = [1, 2000]  # Frequency range to detect sounds that could be speech
 EndBlocks = 20  # Number of blocks to wait before sending to Whisper
 
@@ -42,9 +43,7 @@ class StreamHandler:
         self.padding = 0
         self.prevblock = self.buffer = np.zeros((0, 1))
         self.fileready = False
-        print("\033[96mLoading Whisper Model..\033[0m", end="", flush=True)
-        # self.model = whisper.load_model(f'{Model}{".en" if English else ""}')
-        print("\033[90m Done.\033[0m")
+        self.time_limit = time2() + 30
 
     def callback(self, indata, frames, time, status):
         # if status: print(status) # for debugging, prints stream errors.
@@ -58,7 +57,13 @@ class StreamHandler:
         # A few alternative methods exist for detecting speech.. #indata.max() > Threshold
         # zero_crossing_rate = np.sum(np.abs(np.diff(np.sign(indata)))) / (2 * indata.shape[0]) # threshold 20
         freq = np.argmax(np.abs(np.fft.rfft(indata[:, 0]))) * SampleRate / frames
-        print("Threshold is ", np.sqrt(np.mean(indata**2)))
+        # print("Threshold is ", np.sqrt(np.mean(indata**2)))
+        if np.sqrt(np.mean(indata**2)) > Lower_Threshold:
+            self.time_limit = time2() + 30
+        elif self.time_limit < time2():
+            self.running = False
+            print("\033[31mNo input or device is muted.\033[0m")
+            return
         if (
             np.sqrt(np.mean(indata**2)) > Threshold
             and Vocals[0] <= freq <= Vocals[1]

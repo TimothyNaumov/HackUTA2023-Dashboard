@@ -9,3 +9,7 @@ soundfile
 numpy
 openai
 scipy
+mss
+opencv-python
+pynput
+pydirectinput

@@ -6,6 +6,10 @@ import json
 from openAI import generate_p1_response
 from AudibleResponse import speak
 from dotenv import load_dotenv
+import mss
+import numpy as np
+import cv2
+import pydirectinput
 
 load_dotenv()
 
@@ -61,12 +65,19 @@ class Assistant:
                 "content": f"You are an excited customer service rep at an auto maintenance company. When a user talks to you, give them the most pertinent advice relevant to their car. They may give information, or you may have to read the diagnostic tool. Here is the diagnostic tool's output: {generate_p1_response(json.dumps(car_data))}. Do not use a bullet list or numbered list in your response. Do not respond with more than 2 sentences.",
             },
         ]
-        self.time_limit = time.time() + 60 * 2
+        self.time_limit = time.time() + 60
 
     def analyze(self, input):  # This is the decision tree for the assistant
         # do query function here
         if input == "":
             return
+
+        # if don't receive input for 30 seconds, end the call
+        if time.time() > self.time_limit:
+            self.running = False
+            return
+
+        self.time_limit = time.time() + 60
         # take in the query and do a llm query to get the maintenance from the json
         self.messages.append({"role": "user", "content": input})
         completion = openai.ChatCompletion.create(model=model, messages=self.messages)
@@ -80,6 +91,53 @@ class Assistant:
         self.talking = True  # if I wanna add stop ability, I think function needs to be it's own object
         speak(text)
         self.talking = False
+
+
+class CallHandler:
+    def __init__(self):
+        self.SCREENSHOT = mss.mss()
+        left = 0
+        top = 0
+        right = 1920
+        bottom = 1080
+        width = right - left
+        height = bottom - top
+        self.dimensions = {"left": left, "top": top, "width": width, "height": height}
+
+    def wait_on_call(self):
+        screen = self.SCREENSHOT.grab(self.dimensions)
+        img = np.array(screen)
+        img = cv2.cvtColor(img, cv2.IMREAD_COLOR)
+        phone_accept_img = cv2.imread("phone_button.png", cv2.IMREAD_COLOR)
+        result_try = cv2.matchTemplate(img, phone_accept_img, cv2.TM_CCOEFF_NORMED)
+        threshold = 0.8
+        _, max_val, _, max_loc = cv2.minMaxLoc(result_try)
+        if max_val > threshold:
+            mouse_click(max_loc[0], max_loc[1])
+            pydirectinput.moveTo(540, 540)
+            call_main()
+        # green is rgb(30, 142, 62)
+        # we need to check if there is any green in the image
+
+        # if there is green then we click the call and start the assistant
+        # we can even have it say "hello, how can I help you today?"
+        # if there is no green then we do nothing
+
+
+def mouse_click(x, y):
+    pydirectinput.moveTo(x, y)
+    pydirectinput.click()
+
+
+def call_main():
+    try:
+        AIstant = Assistant()
+        handler = StreamHandler(AIstant)
+        handler.listen()
+    except Exception:
+        if os.path.exists("dictate.wav"):
+            os.remove("dictate.wav")
+        print("handler died")
 
 
 def main():
@@ -96,4 +154,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()  # by Nik
+    time.sleep(1)
+    test: CallHandler = CallHandler()
+    while True:
+        test.wait_on_call()
+
+    # main()
