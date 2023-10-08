@@ -13,7 +13,7 @@ def generate_p1_response(jsons: str) -> List[object]:
     messages = [
         {
             "role": "system",
-            "content": "You are a diagnostic tool that determines a recommended action given this data from a vehicle. Respond with short phrase summarizing what you would recommend servicing",
+            "content": "You are a diagnostic tool that determines a recommended action given this data from a vehicle. Today's date is 10-8-2023, and the scores in the JSON are out of 100, with 100 being the best. Respond with short phrase summarizing what you would recommend servicing.",
         },
         {"role": "user", "content": jsons},
     ]

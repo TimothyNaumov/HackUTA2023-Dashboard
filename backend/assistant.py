@@ -4,36 +4,38 @@ import os
 import openai
 import json
 from openAI import generate_p1_response
+from AudibleResponse import speak
+from dotenv import load_dotenv
 
-with open("secrets.json", "r") as f:
-    secrets = json.load(f)["openai-key"]
-    openai.api_key = secrets
+load_dotenv()
+
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 car_data = {
     "trips": 19,
     "miles": 144.5,
     "scores": {
-        "braking": 95,
-        "acceleration": 97,
-        "speed": 50,
-        "cornering": 70,
+        "braking": 68,
+        "acceleration": 44,
+        "speed": 60,
+        "cornering": 33,
         "phone distraction": 80,
     },
     "lastServicedDate": {
         "brakes": "2023-01-01",
-        "tires": "2023-01-01",
-        "oil": "2023-01-01",
+        "tires": "2021-01-01",
+        "oil": "2023-05-01",
         "battery": "2023-01-01",
         "coolant": "2023-01-01",
         "air filter": "2023-01-01",
     },
-    "estimatedServiceDate": {
-        "brakes": {"date": "2023-07-01", "miles": 20000},
-        "tires": {"date": "2029-01-01", "miles": 50000},
-        "oil": {"date": "2023-07-01", "miles": 7500},
-        "battery": {"date": "2026-01-01", "miles": 30000},
-        "coolant": {"date": "2025-01-01", "miles": 30000},
-        "air filter": {"date": "2024-01-01", "miles": 15000},
+    "timeUntilService": {
+        "brakes": {"days": "250", "miles": 14780},
+        "tires": {"date": "53", "miles": 1260},
+        "oil": {"date": "210", "miles": 4892},
+        "battery": {"date": "745", "miles": 27688},
+        "coolant": {"date": "384", "miles": 18990},
+        "air filter": {"date": "126", "miles": 2344},
     },
     "vehicle": {
         "vehicleType": "Sedan",
@@ -56,14 +58,15 @@ class Assistant:
         self.messages = [
             {
                 "role": "system",
-                "content": f"You are an automated voice assistant that helps callers understand what maintenance they need to perform on their vehicle. Respond with a short summary of the first few steps the user should take and then ask if the user would like more information. Here is the diagnostic tool of the user's car's output: {generate_p1_response(car_data)}. Do not use a bullet list or numbered list in your response.",
+                "content": f"You are an excited customer service rep at an auto maintenance company. When a user talks to you, give them the most pertinent advice relevant to their car. They may give information, or you may have to read the diagnostic tool. Here is the diagnostic tool's output: {generate_p1_response(json.dumps(car_data))}. Do not use a bullet list or numbered list in your response. Do not respond with more than 2 sentences.",
             },
         ]
         self.time_limit = time.time() + 60 * 2
 
     def analyze(self, input):  # This is the decision tree for the assistant
         # do query function here
-
+        if input == "":
+            return
         # take in the query and do a llm query to get the maintenance from the json
         self.messages.append({"role": "user", "content": input})
         completion = openai.ChatCompletion.create(model=model, messages=self.messages)
@@ -75,9 +78,7 @@ class Assistant:
 
     def speak(self, text):
         self.talking = True  # if I wanna add stop ability, I think function needs to be it's own object
-        # print(f"\n\033[92m{text}\033[0m\n")
-        # add eleven labs functionality here
-        # and call this from the analyze function
+        speak(text)
         self.talking = False
 
 

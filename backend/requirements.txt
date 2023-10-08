@@ -7,3 +7,5 @@ pyaudio
 sounddevice
 soundfile
 numpy
+openai
+scipy

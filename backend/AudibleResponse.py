@@ -20,14 +20,14 @@ headers = {
     "xi-api-key": xi_api_key,
 }
 
-sound_device = 6
+sound_device = 11
 
 
 def speak(message):
     data = {
         "text": message,
         "model_id": "eleven_monolingual_v1",
-        "voice_settings": {"stability": 0.5, "similarity_boost": 0.5},
+        "voice_settings": {"stability": 0.25, "similarity_boost": 0.5},
     }
 
     response = requests.post(url, json=data, headers=headers, stream=True)

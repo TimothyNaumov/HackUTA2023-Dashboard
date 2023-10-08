@@ -1,10 +1,13 @@
-import whisper, os
+import os
 import numpy as np
 import sounddevice as sd
 from scipy.io.wavfile import write
 import openai
 import json
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # This is my attempt to make psuedo-live transcription of speech using Whisper.
 # Since my system can't use pyaudio, I'm using sounddevice instead.
@@ -16,13 +19,11 @@ English = True  # Use English-only model?
 Translate = False  # Translate non-English to English?
 SampleRate = 44100  # Stream device recording frequency
 BlockSize = 100  # Block size in milliseconds
-Threshold = 0.01  # Minimum volume threshold to activate listening
+Threshold = 0.03  # Minimum volume threshold to activate listening
 Vocals = [1, 2000]  # Frequency range to detect sounds that could be speech
-EndBlocks = 40  # Number of blocks to wait before sending to Whisper
+EndBlocks = 20  # Number of blocks to wait before sending to Whisper
 
-with open("secrets.json", "r") as f:
-    secrets = json.load(f)["openai-key"]
-    openai.api_key = secrets
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
 class StreamHandler:
@@ -57,7 +58,7 @@ class StreamHandler:
         # A few alternative methods exist for detecting speech.. #indata.max() > Threshold
         # zero_crossing_rate = np.sum(np.abs(np.diff(np.sign(indata)))) / (2 * indata.shape[0]) # threshold 20
         freq = np.argmax(np.abs(np.fft.rfft(indata[:, 0]))) * SampleRate / frames
-        # print("Threshold is ", np.sqrt(np.mean(indata**2)))
+        print("Threshold is ", np.sqrt(np.mean(indata**2)))
         if (
             np.sqrt(np.mean(indata**2)) > Threshold
             and Vocals[0] <= freq <= Vocals[1]
