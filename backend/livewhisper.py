@@ -4,6 +4,7 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import openai
 import json
+import time
 
 # This is my attempt to make psuedo-live transcription of speech using Whisper.
 # Since my system can't use pyaudio, I'm using sounddevice instead.
@@ -17,7 +18,7 @@ SampleRate = 44100  # Stream device recording frequency
 BlockSize = 100  # Block size in milliseconds
 Threshold = 0.01  # Minimum volume threshold to activate listening
 Vocals = [1, 2000]  # Frequency range to detect sounds that could be speech
-EndBlocks = 10  # Number of blocks to wait before sending to Whisper
+EndBlocks = 40  # Number of blocks to wait before sending to Whisper
 
 with open("secrets.json", "r") as f:
     secrets = json.load(f)["openai-key"]
