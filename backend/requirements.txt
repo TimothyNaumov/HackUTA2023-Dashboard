@@ -4,3 +4,6 @@ flask
 pydub
 playsound
 pyaudio
+sounddevice
+soundfile
+numpy
